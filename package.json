@@ -1,0 +1,17 @@
+{
+  "name": "i18nfromhell",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/gick/i18nfromhell.git",
+  "author": "gick <gicquel.pierreyves@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.2",
+    "commander": "^2.12.2",
+    "events": "^1.1.1",
+    "fs": "^0.0.1-security",
+    "hashmap": "^2.3.0",
+    "inquirer": "^4.0.1",
+    "rx-node": "^1.0.2"
+  }
+}
