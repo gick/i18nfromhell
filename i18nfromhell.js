@@ -10,22 +10,20 @@ var map = new HashMap()
 
 module.exports = {
     i18nfromhell: function(path) {
-        var emit = new EventEmitter()
-        var func = (path) => {
             fs.readFile(path, (err, data) => {
+            	if(err){
+            		console.log(err	)
+            	}
                 htmlDoc = cheerio.load(data)
                 var that = this
                 var toProcess = cheerio.load(htmlDoc('html body dom-module template').html())
                 toProcess.root().find('*:not(:has(*))').each(function(i, elem) {
                     map.set(toProcess(elem).text(), elem.name)
                 })
-                console.log('ded')
-                emit.emit('done')
+//                emit.emit('done')
             })
+            return 'ok'
 
-        }
-        func(path)
-        return emit
     },
 
     storeTagText: function(elem) {
@@ -33,7 +31,7 @@ module.exports = {
 
     },
 
-    getKeys: function() {
-        return map.keys()
+    getMap: function() {
+        return map
     }
 }

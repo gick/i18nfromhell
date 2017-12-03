@@ -12,6 +12,7 @@
     "fs": "^0.0.1-security",
     "hashmap": "^2.3.0",
     "inquirer": "^4.0.1",
-    "rx-node": "^1.0.2"
+    "rx-node": "^1.0.2",
+    "string-hash": "^1.1.3"
   }
 }
