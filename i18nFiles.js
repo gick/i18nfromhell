@@ -15,20 +15,20 @@ module.exports = {
         map.forEach(function(value, key) {
             value.forEach(function(term) {
                 var termObject = {}
-                termObject[key] = term
+                termObject.key = key
+                termObject.message=term.message
+                termObject.lang=term.lang
                 langs.set({ key: key, lang: term.lang }, termObject)
             })
         })
         var toWrite = []
 
         langs.forEach(function(item,key) {
-            console.log(item)
-            console.log(key)
-            toWrite.push({ lang: key.lang, obj: item })
+            toWrite.push({ message:item.message,lang: item.lang, key: item.key })
         })
         for (var i = 0; i < toWrite.length; i++) {
         console.log(toWrite[i])
-            fs.writeFile(toWrite[i].lang + '.json', JSON.stringify(toWrite[i].obj), 'utf8');
+            fs.writeFile(toWrite[i].lang + '.json',  toWrite[i].message, 'utf8');
         }
     }
 }
