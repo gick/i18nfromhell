@@ -9,7 +9,6 @@ module.exports = {
         var current = map.get(hashTerm)
         current.push({ lang: lang, message: term })
         map.set(hashTerm, current)
-        console.log(map.values())
     },
     generateLangs: function() {
         var langs = new HashMap()
@@ -20,10 +19,16 @@ module.exports = {
                 langs.set({ key: key, lang: term.lang }, termObject)
             })
         })
-        var toWrite
-        langs.values().forEach(function(item){
-            toWrite=toWrite+JSON.stringify(item)
+        var toWrite = []
+
+        langs.forEach(function(item,key) {
+            console.log(item)
+            console.log(key)
+            toWrite.push({ lang: key.lang, obj: item })
         })
-        fs.writeFile('message.txt', toWrite, 'utf8');
+        for (var i = 0; i < toWrite.length; i++) {
+        console.log(toWrite[i])
+            fs.writeFile(toWrite[i].lang + '.json', JSON.stringify(toWrite[i].obj), 'utf8');
+        }
     }
 }
