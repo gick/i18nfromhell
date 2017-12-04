@@ -1,6 +1,8 @@
 const program = require('commander');
 var inquirer = require('inquirer');
 const hash = require('string-hash')
+const path = require('path');
+
 var Rx = require('rx-lite-aggregates');
 const fs = require('fs')
 const cheerio = require('cheerio')
@@ -11,6 +13,7 @@ var currentLang = "en"
 var initialLang = "fr"
 var currentTranslations
 var prompts = new Rx.Subject()
+var fileArray = []
 const i18nfromhell = require('./i18nfromhell')
 const i18nFiles = require('./i18nFiles')
 const parseFile = (lang) => {
@@ -28,9 +31,9 @@ const parseFile = (lang) => {
 }
 
 
-const saveLangs=(arg)=>{
-	if(arg)
-		i18nFiles.generateLangs()
+const saveLangs = (arg) => {
+    if (arg)
+        i18nFiles.generateLangs()
 }
 
 const choseLang = (choices) => {
@@ -59,15 +62,31 @@ const translate = (lang) => {
         type: 'confirm',
         name: 'saveLangs',
         message: "Enregistrer les json i18n?",
-        default:true
+        default: true
     });
 
 }
+listHTML = function(cmd, args, callBack) {
+    var spawn = require('child_process').spawn;
+    var child = spawn(cmd, args);
+    var resp = "";
+
+    child.stdout.on('data', function(buffer) { resp += buffer.toString() });
+    child.stdout.on('end', function() { callBack(resp) });
+}
+
+
+listHTML("find", ['.', '-type', 'f', '-name', '*.html'], function(filepath) {
+    if (filepath)
+        fileArray.push(path.basename(filepath))
+});
+
+
 
 const addTranslation = (translation) => {
     i18nFiles.addTranslation(currentLang, hash(currentTranslations.shift()), translation)
 }
-var h = i18nfromhell.i18nfromhell('/home/test/Dev/reveries-authoring-client/src/tutorial-view.html')
+//var h = i18nfromhell.i18nfromhell('/home/test/Dev/reveries-authoring-client/src/tutorial-view.html')
 
 next = (arg) => {
     switch (arg.name) {
@@ -101,4 +120,10 @@ prompts.onNext({
         return 'fr';
     }
 
+});
+prompts.onNext({
+    type: 'checkbox',
+    name: 'fileSelect',
+    message: "Select file to i18n",
+    choices: fileArray
 });
