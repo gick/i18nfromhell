@@ -1,9 +1,26 @@
 const program = require('commander');
+var path=require('path')
 var inquirer = require('inquirer');
 const hash = require('string-hash')
-const path = require('path');
+var parseDir=(path)=>{
+	console.log(path)
+	console.log(program.rawArgs)
+}
+program
+    .version('0.1.0')
+    .option('-C, --chdir <path>', 'change the working directory',parseDir)
+    .option('-r, --recursive', 'List HTML files recursivly', 'marble')
+    .parse(process.argv);
 
-var Rx = require('rx-lite-aggregates');
+if (!program.chdir) {
+    console.log('Please provide a dirctory')
+    return
+} else {
+    console.log(program.directory)
+    return
+}
+
+
 const fs = require('fs')
 const cheerio = require('cheerio')
 const HashMap = require('hashmap')
@@ -25,9 +42,6 @@ const parseFile = (lang) => {
         name: 'choice',
         choices: i18nfromhell.getMap().keys()
     });
-
-
-    // i18.on('done',()=>{console.log(i18.getKeys())})
 }
 
 
@@ -76,7 +90,7 @@ listHTML = function(cmd, args, callBack) {
 }
 
 
-listHTML("find", ['.', '-type', 'f', '-name', '*.html'], function(filepath) {
+listHTML("find", ['.', '-maxdepth', '1', '-type', 'f', '-name', '*.html'], function(filepath) {
     if (filepath)
         fileArray.push(path.basename(filepath))
 });
@@ -90,7 +104,7 @@ const addTranslation = (translation) => {
 
 next = (arg) => {
     switch (arg.name) {
-        case 'first':
+        case 'start':
             parseFile(arg.answer)
             break
         case 'choice':
@@ -113,7 +127,7 @@ inquirer.prompt(prompts).ui.process.subscribe(
     (arg) => { next(arg) }
 );
 prompts.onNext({
-    type: 'input',
+    type: 'start',
     name: 'first',
     message: "Chose the lang to translate from",
     default: function() {
